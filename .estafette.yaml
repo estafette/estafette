@@ -30,7 +30,6 @@ stages:
   create-github-release:
     image: extensions/github-release:dev
     ignoreMissingMilestone: true
-    draft: true
     prerelease: true
     assets:
     - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
@@ -45,3 +44,27 @@ stages:
     when:
       status == 'succeeded' ||
       status == 'failed'
+
+releases:
+  github-release:
+    clone: true
+    stages:
+      build:
+        image: golang:1.13.4-alpine3.10
+        env:
+          CGO_ENABLED: 0
+          GOGC: off
+        commands:
+        - GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X cmd.app=${ESTAFETTE_GIT_NAME} -X cmd.version=${ESTAFETTE_BUILD_VERSION} -X cmd.revision=${ESTAFETTE_GIT_REVISION} -X cmd.branch=${ESTAFETTE_GIT_BRANCH} -X cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64 .
+        - GOOS=windows GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X cmd.app=${ESTAFETTE_GIT_NAME} -X cmd.version=${ESTAFETTE_BUILD_VERSION} -X cmd.revision=${ESTAFETTE_GIT_REVISION} -X cmd.branch=${ESTAFETTE_GIT_BRANCH} -X cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64 .
+        - GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X cmd.app=${ESTAFETTE_GIT_NAME} -X cmd.version=${ESTAFETTE_BUILD_VERSION} -X cmd.revision=${ESTAFETTE_GIT_REVISION} -X cmd.branch=${ESTAFETTE_GIT_BRANCH} -X cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64 .
+
+      create-github-release:
+        image: extensions/github-release:dev
+        ignoreMissingMilestone: true
+        draft: false
+        prerelease: true
+        assets:
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
