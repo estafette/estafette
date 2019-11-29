@@ -47,7 +47,6 @@ stages:
     homepage: https://estafette.io
     binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
     tapRepoDir: homebrew-tap
-    formulaDir: Formula
 
   push-to-tap:
     image: golang:1.13.4-alpine3.10
@@ -87,8 +86,6 @@ releases:
       create-github-release:
         image: extensions/github-release:dev
         ignoreMissingMilestone: true
-        draft: false
-        prerelease: true
         assets:
         - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
         - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
@@ -105,7 +102,6 @@ releases:
         homepage: https://estafette.io
         binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
         tapRepoDir: homebrew-tap
-        formulaDir: Formula
 
       push-to-tap:
         image: golang:1.13.4-alpine3.10
