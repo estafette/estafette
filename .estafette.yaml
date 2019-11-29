@@ -47,9 +47,17 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
-  clone-tap:
+  clone-dev-tap:
     image: extensions/git-clone:dev
-    repo: homebrew-tap
+    repo: homebrew-dev
+    when:
+      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
+
+  clone-stable-tap:
+    image: extensions/git-clone:dev
+    repo: homebrew-stable
+    when:
+      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
   create-dev-brew-formula:
     image: extensions/brew:dev
@@ -57,7 +65,7 @@ stages:
     description: The CLI for Estafette - The resilient and cloud-native CI/CD platform (dev track)
     homepage: https://estafette.io
     binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
-    tapRepoDir: homebrew-tap
+    tapRepoDir: homebrew-dev
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
@@ -67,7 +75,7 @@ stages:
     description: The CLI for Estafette - The resilient and cloud-native CI/CD platform
     homepage: https://estafette.io
     binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
-    tapRepoDir: homebrew-tap
+    tapRepoDir: homebrew-stable
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
@@ -75,7 +83,7 @@ stages:
     image: golang:1.13.4-alpine3.10
     commands:
     - apk add git
-    - cd homebrew-tap
+    - cd homebrew-dev
     - git config user.email 'bot@estafette.io'
     - git config user.name 'estafette.bo'
     - git status
@@ -89,7 +97,7 @@ stages:
     image: golang:1.13.4-alpine3.10
     commands:
     - apk add git
-    - cd homebrew-tap
+    - cd homebrew-stable
     - git config user.email 'bot@estafette.io'
     - git config user.name 'estafette.bo'
     - git status
