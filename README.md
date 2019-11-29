@@ -11,10 +11,24 @@ brew install estafette/stable/estafette
 
 Then run `estafette help` to see what commands are available.
 
-## Manifest
+### > estafette manifest validate
 
 The check whether your .estafette.yaml manifest file is valid runL
 
 ```bash
 estafette manifest validate
+```
+
+## Development
+
+Development versions get pushed to github for each commit and have their own tap repository. You can install it via
+
+```bash
+brew install estafette/dev/estafette-dev
+```
+
+And then use it with
+
+```bash
+estafette-dev help
 ```
