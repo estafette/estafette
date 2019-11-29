@@ -1,2 +1,12 @@
 # estafette-cli
 The estafette command line interface to run tons of commands locally for Estafette CI
+
+## Usage
+
+To install this cli on your mac run:
+
+```bash
+brew install estafette/tap/estafette
+```
+
+Then run `estafette help` to see what commands are available.
