@@ -44,7 +44,8 @@ stages:
     image: homebrew/brew:2.2.0
     commands:
     - cd homebrew-tap
-    - brew create --set-name=${ESTAFETTE_GIT_NAME}-dev --set-version=v${ESTAFETTE_BUILD_VERSION} --tap=estafette/ci https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+    - brew new-tap estafette/tap
+    - brew create --set-name=${ESTAFETTE_GIT_NAME}-dev --set-version=v${ESTAFETTE_BUILD_VERSION} --tap=estafette/tap https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
 
   slack-notify:
     image: extensions/slack-build-status:dev
