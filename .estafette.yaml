@@ -36,7 +36,7 @@ stages:
     - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
     - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
     when:
-      status == 'succeeded' && branch != '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' != ''
 
   create-stable-github-release:
     image: extensions/github-release:dev
@@ -45,7 +45,7 @@ stages:
     - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
     - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
     when:
-      status == 'succeeded' && branch == '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' == ''
 
   clone-tap:
     image: extensions/git-clone:dev
@@ -59,7 +59,7 @@ stages:
     binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
     tapRepoDir: homebrew-tap
     when:
-      status == 'succeeded' && branch != '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' != ''
 
   create-stable-brew-formula:
     image: extensions/brew:dev
@@ -69,7 +69,7 @@ stages:
     binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
     tapRepoDir: homebrew-tap
     when:
-      status == 'succeeded' && branch == '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' == ''
 
   push-dev-to-tap:
     image: golang:1.13.4-alpine3.10
@@ -83,7 +83,7 @@ stages:
     - git commit --allow-empty -m "estafette-dev v${ESTAFETTE_BUILD_VERSION}"
     - git push origin master
     when:
-      status == 'succeeded' && branch != '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' != ''
 
   push-stable-to-tap:
     image: golang:1.13.4-alpine3.10
@@ -97,7 +97,7 @@ stages:
     - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
     - git push origin master
     when:
-      status == 'succeeded' && branch == '${ESTAFETTE_BUILD_VERSION_MAJOR}.${ESTAFETTE_BUILD_VERSION_MINOR}.${ESTAFETTE_BUILD_VERSION_PATCH}'
+      status == 'succeeded' && '${ESTAFETTE_BUILD_VERSION_LABEL}' == ''
 
   slack-notify:
     image: extensions/slack-build-status:dev
