@@ -10,3 +10,11 @@ brew install estafette/tap/estafette
 ```
 
 Then run `estafette help` to see what commands are available.
+
+## Manifest
+
+The check whether your .estafette.yaml manifest file is valid runL
+
+```bash
+estafette manifest validate
+```
