@@ -49,7 +49,7 @@ stages:
     tapRepoDir: homebrew-tap
     formulaDir: Formula
 
-  build:
+  push-to-tap:
     image: golang:1.13.4-alpine3.10
     commands:
     - apk add git
@@ -107,7 +107,7 @@ releases:
         tapRepoDir: homebrew-tap
         formulaDir: Formula
 
-      build:
+      push-to-tap:
         image: golang:1.13.4-alpine3.10
         commands:
         - apk add git
