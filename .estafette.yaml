@@ -40,13 +40,14 @@ stages:
     image: extensions/git-clone:dev
     repo: homebrew-tap
 
-  create-brew-dev-bottle:
-    image: homebrew/brew:2.2.0
-    shell: /bin/bash
-    commands:
-    - cd homebrew-tap
-    - brew tap-new estafette/tap
-    - brew create --set-name=${ESTAFETTE_GIT_NAME}-dev --set-version=v${ESTAFETTE_BUILD_VERSION} --tap=estafette/tap https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+  create-brew-formula:
+    image: extensions/brew:dev
+    formula: estafette-dev
+    description: The CLI for Estafette - The resilient and cloud-native CI/CD platform
+    homepage: https://estafette.io
+    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+    tapRepoDir: homebrew-tap
+    formulaDir: Formula
 
   slack-notify:
     image: extensions/slack-build-status:dev
