@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"fmt"
+	"runtime"
 
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,12 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Prints the version number",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Estafette CLI version=%v branch=%v revision=%v goversion=%v builddate=%v", version, branch, revision, goVersion, buildDate)
+		log.Info().
+			Str("branch", branch).
+			Str("revision", revision).
+			Str("buildDate", buildDate).
+			Str("goVersion", goVersion).
+			Str("os", runtime.GOOS).
+			Msgf("Estafette CLI v%v", version)
 	},
 }
