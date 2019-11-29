@@ -49,6 +49,18 @@ stages:
     tapRepoDir: homebrew-tap
     formulaDir: Formula
 
+  build:
+    image: golang:1.13.4-alpine3.10
+    commands:
+    - apk add git
+    - cd homebrew-tap
+    - git config user.email 'bot@estafette.io'
+    - git config user.name 'estafette.bo'
+    - git status
+    - git add --all
+    - git commit --allow-empty -m "estafette-dev v${ESTAFETTE_BUILD_VERSION}"
+    - git push origin master
+
   slack-notify:
     image: extensions/slack-build-status:dev
     workspace: estafette
@@ -81,3 +93,28 @@ releases:
         - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
         - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
         - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
+
+      clone-tap:
+        image: extensions/git-clone:dev
+        repo: homebrew-tap
+
+      create-brew-formula:
+        image: extensions/brew:dev
+        formula: estafette
+        description: The CLI for Estafette - The resilient and cloud-native CI/CD platform
+        homepage: https://estafette.io
+        binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+        tapRepoDir: homebrew-tap
+        formulaDir: Formula
+
+      build:
+        image: golang:1.13.4-alpine3.10
+        commands:
+        - apk add git
+        - cd homebrew-tap
+        - git config user.email 'bot@estafette.io'
+        - git config user.name 'estafette.bo'
+        - git status
+        - git add --all
+        - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
+        - git push origin master
