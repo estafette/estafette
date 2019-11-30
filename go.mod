@@ -1,4 +1,4 @@
-module github.com/estafette/estafette
+module github.com/estafette/estafette-cli
 
 go 1.13
 
