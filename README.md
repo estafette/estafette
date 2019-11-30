@@ -38,3 +38,7 @@ And then use it with
 ```bash
 estafette-dev help
 ```
+
+## Releases
+
+Official releases are performed by creating and pushing a branch with the same version as specified in `version.semver.releaseBranch`.
