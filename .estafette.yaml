@@ -64,7 +64,7 @@ stages:
     formula: estafette-dev
     description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform (dev track)
     homepage: https://estafette.io
-    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
     tapRepoDir: homebrew-dev
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
@@ -74,7 +74,7 @@ stages:
     formula: estafette
     description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform
     homepage: https://estafette.io
-    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/estafette-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
     tapRepoDir: homebrew-stable
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
