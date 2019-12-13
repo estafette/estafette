@@ -24,7 +24,7 @@ estafette manifest validate
 For local development when running `go build .` the generated binary can be used with
 
 ```bash
-estafette-cli help
+./estafette-cli help
 ```
 
 Development versions get released as a pre-release version on github for each commit and have their brew formular updates in a development tap repository. You can install it via

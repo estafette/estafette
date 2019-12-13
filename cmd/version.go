@@ -21,6 +21,6 @@ var versionCmd = &cobra.Command{
 			Str("buildDate", buildDate).
 			Str("goVersion", goVersion).
 			Str("os", runtime.GOOS).
-			Msgf("Estafette CLI v%v", version)
+			Msgf("Estafette command-line interface v%v", version)
 	},
 }
