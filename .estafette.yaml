@@ -50,12 +50,14 @@ stages:
   clone-dev-tap:
     image: extensions/git-clone:dev
     repo: homebrew-dev
+    branch: main
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
   clone-stable-tap:
     image: extensions/git-clone:dev
     repo: homebrew-stable
+    branch: main
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
@@ -89,7 +91,7 @@ stages:
     - git status
     - git add --all
     - git commit --allow-empty -m "estafette-dev v${ESTAFETTE_BUILD_VERSION}"
-    - git push origin master
+    - git push origin main
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
@@ -103,7 +105,7 @@ stages:
     - git status
     - git add --all
     - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
-    - git push origin master
+    - git push origin main
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
