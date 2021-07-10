@@ -1,6 +1,6 @@
 package main
 
-import "github.com/estafette/estafette-cli/cmd"
+import "github.com/estafette/estafette/cmd"
 
 func main() {
 	cmd.Execute()

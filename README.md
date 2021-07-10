@@ -1,4 +1,5 @@
-# estafette-cli
+# estafette
+
 The estafette command line interface to run tons of commands locally for Estafette CI
 
 ## Usage
@@ -24,7 +25,7 @@ estafette manifest validate
 For local development when running `go build .` the generated binary can be used with
 
 ```bash
-./estafette-cli help
+./estafette help
 ```
 
 Development versions get released as a pre-release version on github for each commit and have their brew formular updates in a development tap repository. You can install it via
