@@ -16,16 +16,12 @@ version:
 
 stages:
   build:
-    image: golang:1.14.0-alpine3.11
+    image: golang:1.16-alpine
     env:
       CGO_ENABLED: 0
-      GOGC: off
     commands:
     - go vet ./...
     - go test -failfast -vet=off ./...
-    - GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64 .
-    - GOOS=windows GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe .
-    - GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64 .
 
   create-dev-github-release:
     image: extensions/github-release:dev
@@ -38,14 +34,14 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
-  create-stable-github-release:
-    image: extensions/github-release:dev
-    assets:
-    - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
-    - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
-    - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
-    when:
-      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
+  # create-stable-github-release:
+  #   image: extensions/github-release:dev
+  #   assets:
+  #   - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
+  #   - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
+  #   - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
+  #   when:
+  #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
   clone-dev-tap:
     image: extensions/git-clone:dev
@@ -54,12 +50,12 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
-  clone-stable-tap:
-    image: extensions/git-clone:dev
-    repo: homebrew-stable
-    branch: main
-    when:
-      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
+  # clone-stable-tap:
+  #   image: extensions/git-clone:dev
+  #   repo: homebrew-stable
+  #   branch: main
+  #   when:
+  #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
   create-dev-brew-formula:
     image: extensions/brew:dev
@@ -71,15 +67,15 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
-  create-stable-brew-formula:
-    image: extensions/brew:dev
-    formula: estafette
-    description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform
-    homepage: https://estafette.io
-    binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
-    tapRepoDir: homebrew-stable
-    when:
-      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
+  # create-stable-brew-formula:
+  #   image: extensions/brew:dev
+  #   formula: estafette
+  #   description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform
+  #   homepage: https://estafette.io
+  #   binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+  #   tapRepoDir: homebrew-stable
+  #   when:
+  #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
   push-dev-to-tap:
     image: golang:1.14.0-alpine3.11
@@ -95,25 +91,95 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
-  push-stable-to-tap:
-    image: golang:1.14.0-alpine3.11
-    commands:
-    - apk add git
-    - cd homebrew-stable
-    - git config user.email 'bot@estafette.io'
-    - git config user.name 'estafette.bo'
-    - git status
-    - git add --all
-    - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
-    - git push origin main
-    when:
-      status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
+  # push-stable-to-tap:
+  #   image: golang:1.14.0-alpine3.11
+  #   commands:
+  #   - apk add git
+  #   - cd homebrew-stable
+  #   - git config user.email 'bot@estafette.io'
+  #   - git config user.name 'estafette.bo'
+  #   - git status
+  #   - git add --all
+  #   - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
+  #   - git push origin main
+  #   when:
+  #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
-  slack-notify:
-    image: extensions/slack-build-status:dev
-    workspace: estafette
-    channels:
-    - '#build-status'
-    when:
-      status == 'succeeded' ||
-      status == 'failed'
+releases:
+  github-stable-release:
+    clone: true
+    stages:
+      build:
+        image: golang:1.16-alpine
+        env:
+          CGO_ENABLED: 0
+        commands:
+        - GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64 .
+        - GOOS=windows GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe .
+        - GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64 .
+
+      create-github-release:
+        image: extensions/github-release:stable
+        assets:
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe
+        - ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64
+
+  brew-stable-release:
+    triggers:
+    - release:
+        name: self
+        target: github-stable-release
+    stages:
+      clone-tap:
+        image: extensions/git-clone:stable
+        repo: homebrew-stable
+        branch: main
+
+      create-brew-formula:
+        image: extensions/brew:stable
+        formula: estafette
+        description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform (dev track)
+        homepage: https://estafette.io
+        binaryURL: https://github.com/estafette/estafette/releases/download/v${ESTAFETTE_BUILD_VERSION}/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64.zip
+        tapRepoDir: homebrew-stable
+
+      push-tap:
+        image: alpine:3.13
+        commands:
+        - apk add git
+        - cd homebrew-stable
+        - git config user.email 'bot@estafette.io'
+        - git config user.name 'estafette.bot'
+        - git status
+        - git add --all
+        - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
+        - git push origin main
+
+  gofish-stable-release:
+    triggers:
+    - release:
+        name: self
+        target: github-stable-release
+    stages:
+      clone-rig:
+        image: extensions/git-clone:stable
+        repo: fish-food
+        branch: master
+
+      create-fish-food:
+        image: extensions/gofish:stable
+        name: estafette
+        description: The command-line interface for Estafette - The resilient and cloud-native CI/CD platform
+
+      push-rig:
+        image: alpine:3.13
+        commands:
+        - apk add git
+        - cd fish-food
+        - git config user.email 'bot@estafette.io'
+        - git config user.name 'estafette.bot'
+        - git status
+        - git add --all
+        - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
+        - git push origin master

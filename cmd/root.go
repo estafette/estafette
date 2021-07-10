@@ -36,7 +36,7 @@ var (
 func Execute() {
 
 	// init the logger
-	foundation.InitLoggingByFormatSilent(appgroup, app, version, branch, revision, buildDate, foundation.LogFormatConsole)
+	foundation.InitLoggingByFormatSilent(foundation.NewApplicationInfo(appgroup, app, version, branch, revision, buildDate), foundation.LogFormatConsole)
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if verbose {

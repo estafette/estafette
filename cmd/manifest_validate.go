@@ -14,7 +14,7 @@ var validateValidateCmd = &cobra.Command{
 	Use:   "validate",
 	Short: "Validates the .estafette.yaml manifest in the current directory",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := manifest.ReadManifestFromFile(".estafette.yaml")
+		_, err := manifest.ReadManifestFromFile(nil, ".estafette.yaml", true)
 		if err != nil {
 			log.Fatal().Err(err).Msg("The .estafette.yaml file is not valid")
 		}
