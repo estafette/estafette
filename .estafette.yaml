@@ -22,6 +22,9 @@ stages:
     commands:
     - go vet ./...
     - go test -failfast -vet=off ./...
+    - GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-linux-amd64 .
+    - GOOS=windows GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-windows-amd64.exe .
+    - GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-X github.com/estafette/estafette-cli/cmd.appgroup=${ESTAFETTE_LABEL_APP_GROUP} -X github.com/estafette/estafette-cli/cmd.app=${ESTAFETTE_GIT_NAME} -X github.com/estafette/estafette-cli/cmd.version=${ESTAFETTE_BUILD_VERSION} -X github.com/estafette/estafette-cli/cmd.revision=${ESTAFETTE_GIT_REVISION} -X github.com/estafette/estafette-cli/cmd.branch=${ESTAFETTE_GIT_BRANCH} -X github.com/estafette/estafette-cli/cmd.buildDate=${ESTAFETTE_BUILD_DATETIME}" -o ./binaries/${ESTAFETTE_GIT_NAME}-v${ESTAFETTE_BUILD_VERSION}-darwin-amd64 .
 
   create-dev-github-release:
     image: extensions/github-release:dev
@@ -78,7 +81,7 @@ stages:
   #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
 
   push-dev-to-tap:
-    image: golang:1.14.0-alpine3.11
+    image: golang:1.16-alpine
     commands:
     - apk add git
     - cd homebrew-dev
@@ -92,7 +95,7 @@ stages:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
   # push-stable-to-tap:
-  #   image: golang:1.14.0-alpine3.11
+  #   image: golang:1.16-alpine
   #   commands:
   #   - apk add git
   #   - cd homebrew-stable
