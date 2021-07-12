@@ -2,25 +2,92 @@
 
 The estafette command line interface to run tons of commands locally for Estafette CI
 
-## Usage
 
-To install this cli on your mac run:
+# Install
 
-```bash
+## With Homebrew
+
+First install Homebrew:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+And docker:
+
+```
+brew install --cask docker
+```
+
+Then install the `estafette` cli with
+
+```
 brew install estafette/stable/estafette
 ```
 
-Then run `estafette help` to see what commands are available.
+## With GoFish
 
-### > estafette manifest validate
+First install [GoFish](https://gofi.sh/):
 
-The check whether your .estafette.yaml manifest file is valid runL
+_MacOS/Linux_
 
-```bash
-estafette manifest validate
+```
+curl -fsSL https://raw.githubusercontent.com/fishworks/gofish/main/scripts/install.sh | bash
+gofish init
 ```
 
-## Development
+_Windows_
+
+```
+Set-ExecutionPolicy Bypass -Scope Process -Force
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/fishworks/gofish/main/scripts/install.ps1'))
+gofish init
+```
+
+Then install the `estafette` cli with
+
+```
+gofish rig add https://github.com/estafette/fish-food
+gofish install estafette
+```
+
+## From source
+
+```
+go install github.com/estafette/estafette
+```
+
+
+# Usage
+
+Run `estafette help` to see what commands are available.
+
+## Validate
+
+To check whether your .estafette.yaml manifest file is valid run
+
+```bash
+estafette validate
+```
+
+## Build
+
+To build the .estafette.yaml manifest locally run
+
+```bash
+estafette build
+```
+
+This will only run the first stage; if you want to run more stages pass the stages names as a comma separated list
+
+```bash
+estafette build restore,build,test
+```
+
+Do realize your local build doesn't have access to the same credentials the Estafette CI server has so you won't be able to build all stages.
+
+
+# Development
 
 For local development when running `go build .` the generated binary can be used with
 

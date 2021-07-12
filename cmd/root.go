@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"context"
 	"runtime"
 
 	foundation "github.com/estafette/estafette-foundation"
@@ -11,13 +10,14 @@ import (
 )
 
 var (
-	appgroup  string
-	app       string
-	version   string
-	branch    string
-	revision  string
-	buildDate string
-	goVersion = runtime.Version()
+	appgroup        string
+	app             string
+	version         string
+	branch          string
+	revision        string
+	buildDate       string
+	goVersion       = runtime.Version()
+	applicationInfo = foundation.NewApplicationInfo(appgroup, app, version, branch, revision, buildDate)
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -31,24 +31,23 @@ var (
 	}
 )
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-
-	// init the logger
-	foundation.InitLoggingByFormatSilent(foundation.NewApplicationInfo(appgroup, app, version, branch, revision, buildDate), foundation.LogFormatConsole)
+// Execute executes the root command.
+func Execute(ctx context.Context) error {
+	// initialize logging
+	foundation.InitLoggingByFormat(applicationInfo, foundation.LogFormatConsole)
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if verbose {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	return rootCmd.ExecuteContext(ctx)
 }
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+
+	rootCmd.AddCommand(validateCmd)
+	rootCmd.AddCommand(buildCmd)
+	rootCmd.AddCommand(versionCmd)
 }

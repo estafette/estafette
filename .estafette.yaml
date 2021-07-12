@@ -68,20 +68,6 @@ stages:
     when:
       status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' != '${ESTAFETTE_BUILD_VERSION}'
 
-  # push-stable-to-tap:
-  #   image: golang:1.16-alpine
-  #   commands:
-  #   - apk add git
-  #   - cd homebrew-stable
-  #   - git config user.email 'bot@estafette.io'
-  #   - git config user.name 'estafette.bo'
-  #   - git status
-  #   - git add --all
-  #   - git commit --allow-empty -m "estafette v${ESTAFETTE_BUILD_VERSION}"
-  #   - git push origin main
-  #   when:
-  #     status == 'succeeded' && '${ESTAFETTE_GIT_BRANCH}' == '${ESTAFETTE_BUILD_VERSION}'
-
 releases:
   github-stable-release:
     clone: true
