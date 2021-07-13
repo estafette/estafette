@@ -17,6 +17,10 @@ var buildCmd = &cobra.Command{
 	Short: "Build .estafette.yaml manifest locally",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
+		if len(args) == 0 {
+			return fmt.Errorf("Please specify which stages to run")
+		}
+
 		// handle cancellation
 		ctx := foundation.InitCancellationContext(context.Background())
 
@@ -42,12 +46,7 @@ var buildCmd = &cobra.Command{
 		pipelineRunner := builder.NewPipelineRunner(envvarHelper, whenEvaluator, containerRunner, false, tailLogsChannel, applicationInfo)
 
 		// get stages to run from arguments
-		stagesToRun := []string{}
-		if len(args) > 0 {
-			stagesToRun = strings.Split(args[0], ",")
-		} else {
-			return fmt.Errorf("Please specify which stages to run")
-		}
+		stagesToRun := strings.Split(args[0], ",")
 
 		err = ciBuilder.RunLocalBuild(ctx, pipelineRunner, containerRunner, envvarHelper, contracts.BuilderConfig{}, stagesToRun)
 		if err != nil {
