@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/estafette/estafette-ci-builder/pkg/builder"
@@ -44,6 +45,8 @@ var buildCmd = &cobra.Command{
 		stagesToRun := []string{}
 		if len(args) > 0 {
 			stagesToRun = strings.Split(args[0], ",")
+		} else {
+			return fmt.Errorf("Please specify which stages to run")
 		}
 
 		err = ciBuilder.RunLocalBuild(ctx, pipelineRunner, containerRunner, envvarHelper, contracts.BuilderConfig{}, stagesToRun)
