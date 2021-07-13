@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"os"
 	"runtime"
 
 	foundation "github.com/estafette/estafette-foundation"
@@ -25,23 +26,27 @@ var (
 	verbose bool
 
 	rootCmd = &cobra.Command{
-		Use:   "estafette",
-		Short: "The command-line interface for Estafette",
-		Long:  `Estafette is the resilient and cloud-native CI/CD platform. Read more at https://estafette.io`,
+		Use:          "estafette",
+		Short:        "The command-line interface for Estafette",
+		Long:         `Estafette is the resilient and cloud-native CI/CD platform. Read more at https://estafette.io`,
+		SilenceUsage: true,
 	}
 )
 
 // Execute executes the root command.
-func Execute(ctx context.Context) error {
+func Execute(ctx context.Context) {
 	// initialize logging
-	foundation.InitLoggingByFormat(applicationInfo, foundation.LogFormatConsole)
+	foundation.InitLoggingByFormatSilent(applicationInfo, foundation.LogFormatConsole)
 
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	if verbose {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	return rootCmd.ExecuteContext(ctx)
+	err := rootCmd.ExecuteContext(ctx)
+	if err != nil {
+		os.Exit(1)
+	}
 }
 
 func init() {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
 
@@ -33,7 +32,5 @@ func main() {
 		// os.Exit(2)
 	}()
 
-	if err := cmd.Execute(ctx); err != nil {
-		log.Fatal(err)
-	}
+	cmd.Execute(ctx)
 }
