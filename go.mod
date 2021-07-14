@@ -3,7 +3,7 @@ module github.com/estafette/estafette
 go 1.13
 
 require (
-	github.com/estafette/estafette-ci-builder v0.0.923
+	github.com/estafette/estafette-ci-builder v0.0.925
 	github.com/estafette/estafette-ci-contracts v0.0.271
 	github.com/estafette/estafette-ci-crypt v0.0.42
 	github.com/estafette/estafette-ci-manifest v0.1.199
