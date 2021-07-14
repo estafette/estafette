@@ -25,6 +25,12 @@ Then install the `estafette` cli with
 brew install estafette/stable/estafette
 ```
 
+Updating to the latest can be done with
+
+```
+brew upgrade
+```
+
 ## With GoFish
 
 First install [GoFish](https://gofi.sh/):
@@ -49,6 +55,12 @@ Then install the `estafette` cli with
 ```
 gofish rig add https://github.com/estafette/fish-food
 gofish install estafette
+```
+
+If you already have it installed upgrade to the latest and greatest with
+
+```
+gofish upgrade
 ```
 
 ## From source
